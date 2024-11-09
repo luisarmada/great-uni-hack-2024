@@ -2,67 +2,67 @@ body {
     font-family: 'Comic Neue', cursive;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
+
   .navbar {
     transition: height 0.3s ease;
   }
 
-  
+
   .navbar-collapse {
     transition: max-height 0.3s ease;
   }
-  
+
   .navbar-brand {
     font-size: 1.75rem;
     font-weight: bold;
     color: #FF6347;
   }
-  
+
   .navbar-nav .nav-item {
     transition: transform 0.3s ease;
   }
-  
+
   .container {
     max-width: 700px;
   }
-  
+
   h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 20px;
   }
-  
+
   p.lead {
     font-size: 1.3rem;
     color: #555;
   }
-  
+
   .btn-primary {
     font-size: 1.1rem;
     padding: 12px 24px;
     border-radius: 8px;
   }
-  
+
   body.meme-theme {
     background-color: #ffd700;
     color: #222;
   }
-  
+
   body.meme-theme h1 {
     color: #222;
   }
-  
+
   body.meme-theme .navbar {
     background-color: #FF69B4;
   }
-  
+
   body.meme-theme .navbar-brand,
   .meme-theme .nav-link {
     color: #222;
   }
-  
+
   body.meme-theme .btn-primary {
     background-color: #FF4500;
     color: #fff;
   }
-  
+
