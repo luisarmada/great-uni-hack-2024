@@ -2,10 +2,14 @@ import cv2
 import time
 import threading
 import pyttsx3
+import pygame
 
 # Initialize the TTS engine
 engine = pyttsx3.init()
 engine.setProperty('rate', 150)  # Adjust the rate of speech
+
+# Initialize Pygame for audio playback
+pygame.mixer.init()
 
 # Define a list of questions with options and correct answer index
 questions = [
@@ -15,13 +19,19 @@ questions = [
 ]
 option_prefixes = ["A)", "B)", "C)", "D)"]  # Option letters
 
+# Load the overlay image with transparency (using -1 to include the alpha channel)
+overlay_image = cv2.imread("media/trump.png", -1)
+overlay_height, overlay_width = 200, 250  # Set larger size for the overlay image
+overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
+
 # Open the video file
-cap = cv2.VideoCapture('media/mc_parkour_lq.mp4')
+cap = cv2.VideoCapture('media/mc_parkour.mp4')
 
 # Initialize question index and timers
 current_question_index = 0
 display_correct_only = False
 show_progress_bar = False
+show_overlay_image = True  # Controls when to show the overlay image
 progress_bar_start_time = 0  # Dedicated timer for the progress bar
 
 # Progress bar settings
@@ -30,27 +40,39 @@ progress_bar_width_ratio = 0.4  # 40% of the frame width
 
 def draw_rounded_rectangle(frame, x_start, y_start, width, height, color, radius=10, thickness=-1):
     """Draws a rounded rectangle on the frame."""
-    # Draw the central rectangle (without rounded corners)
     cv2.rectangle(frame, (x_start + radius, y_start), (x_start + width - radius, y_start + height), color, thickness)
-    
-    # Draw circles for rounded edges
     cv2.circle(frame, (x_start + radius, y_start + radius), radius, color, thickness)
     cv2.circle(frame, (x_start + width - radius, y_start + radius), radius, color, thickness)
     cv2.circle(frame, (x_start + radius, y_start + height - radius), radius, color, thickness)
     cv2.circle(frame, (x_start + width - radius, y_start + height - radius), radius, color, thickness)
-    
-    # Draw rectangles for the straight parts
     cv2.rectangle(frame, (x_start, y_start + radius), (x_start + width, y_start + height - radius), color, thickness)
     return frame
+
+def overlay_image_with_alpha(background, overlay, x, y):
+    """Overlay an image with transparency on top of a background image."""
+    overlay_rgb = overlay[..., :3]  # Color channels
+    overlay_alpha = overlay[..., 3:] / 255.0  # Alpha channel (0-1 range)
+
+    # Define the region of interest (ROI) in the background
+    h, w = overlay_rgb.shape[:2]
+    roi = background[y:y+h, x:x+w]
+
+    # Blend overlay and background based on alpha channel
+    background[y:y+h, x:x+w] = (overlay_rgb * overlay_alpha + roi * (1 - overlay_alpha)).astype(background.dtype)
 
 def speak_text(text):
     """Function to speak text using TTS"""
     engine.say(text)
     engine.runAndWait()
 
+def play_timer_audio():
+    """Plays the five-second timer audio"""
+    pygame.mixer.music.load("media/five_s_timer.mp3")
+    pygame.mixer.music.play()
+
 def read_question_and_answer():
     """Announces the question, shows progress bar, and reads the answer"""
-    global show_progress_bar, display_correct_only, progress_bar_start_time
+    global show_progress_bar, display_correct_only, progress_bar_start_time, show_overlay_image
 
     # Read the question
     question_data = questions[current_question_index]
@@ -58,13 +80,16 @@ def read_question_and_answer():
     correct_answer_index = question_data["correct_answer_index"]
     correct_answer_text = f"The correct answer is {questions[current_question_index]['options'][correct_answer_index]}."
 
-    # Speak the question only
+    # Show overlay image and speak the question
+    show_overlay_image = True
     speak_text(question_text)
 
-    # Wait 1 second, then show the progress bar
+    # Wait 1 second, then show the progress bar and play the timer audio
     time.sleep(1)
     show_progress_bar = True
+    show_overlay_image = False  # Hide the overlay image when progress bar starts
     progress_bar_start_time = time.time()  # Start the timer for the progress bar
+    threading.Thread(target=play_timer_audio).start()  # Play audio in a separate thread
 
     # Wait for the progress bar to complete (5 seconds)
     time.sleep(progress_bar_duration)
@@ -118,60 +143,56 @@ while True:
     # Display "Question x out of y" text above the question
     question_num_text = f"Question {current_question_index + 1} out of {len(questions)}"
     question_num_y = frame_height // 2 - line_height * 3  # Position above the question text
-    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, outline_color, outline_thickness)  # Black outline
-    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, question_color, thickness)  # White text
+    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, outline_color, outline_thickness)
+    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, question_color, thickness)
 
     # Display question with outline and white color
     question_y = frame_height // 2 - line_height * 2  # Center question and options on screen
-    cv2.putText(frame, question_text, (x, question_y), font, font_scale, outline_color, outline_thickness)  # Black outline
-    cv2.putText(frame, question_text, (x, question_y), font, font_scale, question_color, thickness)  # White text
+    cv2.putText(frame, question_text, (x, question_y), font, font_scale, outline_color, outline_thickness)
+    cv2.putText(frame, question_text, (x, question_y), font, font_scale, question_color, thickness)
 
     # Display options with prefix letters, outline, and colors
     y = question_y
     for i, option in enumerate(options):
         y += line_height
         if display_correct_only:
-            # Show only the correct answer option
             if i == correct_answer_index:
                 option_text = f"{option_prefixes[i]} {option}"
                 cv2.putText(frame, option_text, (x, y), font, font_scale, outline_color, outline_thickness)
                 cv2.putText(frame, option_text, (x, y), font, font_scale, correct_option_color, thickness)
         else:
-            # Display all options with yellow color before the reveal
             option_text = f"{option_prefixes[i]} {option}"
             cv2.putText(frame, option_text, (x, y), font, font_scale, outline_color, outline_thickness)
             cv2.putText(frame, option_text, (x, y), font, font_scale, options_color, thickness)
 
+    # Display the overlay image in the bottom-right corner when reading the question
+    if show_overlay_image:
+        overlay_y = frame_height - overlay_height  # 0-pixel margin from bottom
+        overlay_x = frame_width - overlay_width - 10    # 10-pixel margin from right
+        overlay_image_with_alpha(frame, overlay_image, overlay_x, overlay_y)
+
     # Display the progress bar if the flag is set
     if show_progress_bar:
-        # Calculate progress bar width (40% of the frame width)
         progress_bar_width = int(frame_width * progress_bar_width_ratio)
-
-        # Calculate the remaining width of the progress bar based on elapsed time
         elapsed_time = time.time() - progress_bar_start_time
         progress = max(0, 1 - (elapsed_time / progress_bar_duration))
         remaining_width = int(progress_bar_width * progress)
 
-        # Position the progress bar slightly below the last option and centered
         bar_height = 20
-        bar_x_start = (frame_width - progress_bar_width) // 2  # Center the progress bar
-        bar_y_start = y + line_height + 20  # Slightly below the last option
+        bar_x_start = (frame_width - progress_bar_width) // 2
+        bar_y_start = y + line_height + 20
 
-        # Draw the rounded progress bar
-        draw_rounded_rectangle(frame, bar_x_start - 2, bar_y_start - 2, progress_bar_width + 4, bar_height + 4, (255, 255, 255), radius=10, thickness=2)  # White border
-        draw_rounded_rectangle(frame, bar_x_start, bar_y_start, progress_bar_width, bar_height, (0, 0, 0), radius=10, thickness=-1)  # Black background
+        draw_rounded_rectangle(frame, bar_x_start - 2, bar_y_start - 2, progress_bar_width + 4, bar_height + 4, (255, 255, 255), radius=10, thickness=2)
+        draw_rounded_rectangle(frame, bar_x_start, bar_y_start, progress_bar_width, bar_height, (0, 0, 0), radius=10, thickness=-1)
 
-        # Draw the red rounded progress bar fill based on remaining width
         if remaining_width > 0:
             draw_rounded_rectangle(frame, bar_x_start, bar_y_start, remaining_width, bar_height, (0, 0, 255), radius=10, thickness=-1)
 
-    # Display the frame
     cv2.imshow('video', frame)
 
-    # Press 'q' to quit
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(20) & 0xFF == ord('q'):
         break
 
-# Release resources
 cap.release()
+pygame.mixer.quit()
 cv2.destroyAllWindows()
