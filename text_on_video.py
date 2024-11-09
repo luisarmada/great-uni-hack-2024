@@ -1,7 +1,7 @@
 import cv2
 import time
-import pyttsx3
 import threading
+import pyttsx3
 
 # Initialize the TTS engine
 engine = pyttsx3.init()
@@ -29,7 +29,7 @@ progress_bar_duration = 5      # Progress bar duration (5 seconds)
 progress_bar_width_ratio = 0.4  # 40% of the frame width
 
 def draw_rounded_rectangle(frame, x_start, y_start, width, height, color, radius=10, thickness=-1):
-    """ Draws a rounded rectangle on the frame """
+    """Draws a rounded rectangle on the frame."""
     # Draw the central rectangle (without rounded corners)
     cv2.rectangle(frame, (x_start + radius, y_start), (x_start + width - radius, y_start + height), color, thickness)
     
@@ -115,12 +115,19 @@ while True:
     line_height = 40  # Spacing between lines
     x = 50  # Left padding for the text
 
+    # Display "Question x out of y" text above the question
+    question_num_text = f"Question {current_question_index + 1} out of {len(questions)}"
+    question_num_y = frame_height // 2 - line_height * 3  # Position above the question text
+    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, outline_color, outline_thickness)  # Black outline
+    cv2.putText(frame, question_num_text, (x, question_num_y), font, font_scale, question_color, thickness)  # White text
+
     # Display question with outline and white color
-    y = frame_height // 2 - line_height * 2  # Center question and options on screen
-    cv2.putText(frame, question_text, (x, y), font, font_scale, outline_color, outline_thickness)  # Black outline
-    cv2.putText(frame, question_text, (x, y), font, font_scale, question_color, thickness)  # White text
+    question_y = frame_height // 2 - line_height * 2  # Center question and options on screen
+    cv2.putText(frame, question_text, (x, question_y), font, font_scale, outline_color, outline_thickness)  # Black outline
+    cv2.putText(frame, question_text, (x, question_y), font, font_scale, question_color, thickness)  # White text
 
     # Display options with prefix letters, outline, and colors
+    y = question_y
     for i, option in enumerate(options):
         y += line_height
         if display_correct_only:
@@ -140,7 +147,7 @@ while True:
         # Calculate progress bar width (40% of the frame width)
         progress_bar_width = int(frame_width * progress_bar_width_ratio)
 
-        # Calculate the remaining width based on the progress bar timer
+        # Calculate the remaining width of the progress bar based on elapsed time
         elapsed_time = time.time() - progress_bar_start_time
         progress = max(0, 1 - (elapsed_time / progress_bar_duration))
         remaining_width = int(progress_bar_width * progress)
@@ -150,11 +157,11 @@ while True:
         bar_x_start = (frame_width - progress_bar_width) // 2  # Center the progress bar
         bar_y_start = y + line_height + 20  # Slightly below the last option
 
-        # Draw the white border with a black background
-        draw_rounded_rectangle(frame, bar_x_start - 2, bar_y_start - 2, progress_bar_width + 4, bar_height + 4, (255, 255, 255), radius=10, thickness=2)
-        draw_rounded_rectangle(frame, bar_x_start, bar_y_start, progress_bar_width, bar_height, (0, 0, 0), radius=10, thickness=-1)
+        # Draw the rounded progress bar
+        draw_rounded_rectangle(frame, bar_x_start - 2, bar_y_start - 2, progress_bar_width + 4, bar_height + 4, (255, 255, 255), radius=10, thickness=2)  # White border
+        draw_rounded_rectangle(frame, bar_x_start, bar_y_start, progress_bar_width, bar_height, (0, 0, 0), radius=10, thickness=-1)  # Black background
 
-        # Draw the progress bar fill (red) with rounded corners
+        # Draw the red rounded progress bar fill based on remaining width
         if remaining_width > 0:
             draw_rounded_rectangle(frame, bar_x_start, bar_y_start, remaining_width, bar_height, (0, 0, 255), radius=10, thickness=-1)
 
