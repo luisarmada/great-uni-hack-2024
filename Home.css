@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .container {
+    max-width: 600px;
+  }
+  
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+  
+  p.lead {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .btn-primary {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
