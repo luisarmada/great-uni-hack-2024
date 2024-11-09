@@ -16,7 +16,7 @@ questions = [
 option_prefixes = ["A)", "B)", "C)", "D)"]  # Option letters
 
 # Open the video file
-cap = cv2.VideoCapture('media/mc_parkour.mp4')
+cap = cv2.VideoCapture('media/mc_parkour_lq.mp4')
 
 # Initialize question index and timers
 current_question_index = 0
