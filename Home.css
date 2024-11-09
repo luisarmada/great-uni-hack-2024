@@ -6,6 +6,7 @@ body {
   .navbar {
     transition: height 0.3s ease;
   }
+
   
   .navbar-collapse {
     transition: max-height 0.3s ease;
