@@ -11,7 +11,7 @@
 }
   body {
     background-color: black;
-    overflow: hidden;
+    /* overflow: hidden; */
     font-family: 'Comic Neue', cursive;
   }
   
