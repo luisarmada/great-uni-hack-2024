@@ -1,90 +1,120 @@
 :root {
-    --light-gold-rgb: 249 181 51;
-    --dark-gold-rgb: 215 147 23;
-  }
-  
-  body {
-    background-color: black;
-    overflow: hidden;
-    font-family: 'Comic Neue', cursive;
-  }
-  
-  /* Navbar and Container Styling */
-  .navbar {
-    background-color: transparent;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  .navbar-brand {
-    font-size: 1.75rem;
-    font-weight: bold;
-    color: #FF6347; 
-  }
+  --light-gold-rgb: 249, 181, 51;
+  --dark-gold-rgb: 215, 147, 23;
+  --glow-rgb: 239, 42, 201;
+}
 
-  .container {
-    max-width: 700px;
-    text-align: center;
-  }
+body {
+  background-color: black;
+  overflow: hidden;
+  font-family: 'Comic Neue', cursive;
+}
 
-  h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-  }
+/* Navbar and Container Styling */
+.navbar {
+  background-color: transparent;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.navbar-brand {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #FF6347;
+}
 
-  p.lead {
-    font-size: 1.3rem;
-    color: #555;
-  }
+.container {
+  max-width: 700px;
+  text-align: center;
+}
 
-  .btn-primary {
-    font-size: 1.1rem;
-    padding: 12px 24px;
-    border-radius: 8px;
-  }
-  
-  /* Star Background Styling */
-  #app {
-    height: 100vh;
-    position: fixed;
-    width: 100vw;
-    overflow: hidden;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-  
-  #star-container {
-    background: radial-gradient(rgb(var(--light-gold-rgb)), rgb(var(--dark-gold-rgb)));
-    height: 100%;
-    position: relative;
-  }
-  
-  #star-pattern {
-    background-image: url("https://assets.codepen.io/1468070/Star+Pattern+3.svg");
-    background-size: 10%;
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    z-index: 1;
-    height: 100%;
-    width: 100%;
-    opacity: 0.1;
-    animation: pan 120s linear infinite;
-  }
-  
-  @keyframes pan {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 0%; }
-  }
-  
-  #star-gradient-overlay {
-    background: radial-gradient(circle, transparent 75%, rgb(var(--dark-gold-rgb)));
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.9;
-    z-index: 2;
-  }
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
 
+p.lead {
+  font-size: 1.3rem;
+  color: #555;
+}
+
+.btn-primary {
+  font-size: 1.1rem;
+  padding: 12px 24px;
+  border-radius: 8px;
+}
+
+/* Star Background Styling */
+#app {
+  height: 100vh;
+  position: fixed;
+  width: 100vw;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+#star-container {
+  background: radial-gradient(rgb(var(--light-gold-rgb)), rgb(var(--dark-gold-rgb)));
+  height: 100%;
+  position: relative;
+}
+
+#star-pattern {
+  background-image: url("https://assets.codepen.io/1468070/Star+Pattern+3.svg");
+  background-size: 10%;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  opacity: 0.1;
+  animation: pan 120s linear infinite;
+}
+
+@keyframes pan {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
+#star-gradient-overlay {
+  background: radial-gradient(circle, transparent 75%, rgb(var(--dark-gold-rgb)));
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
+  z-index: 2;
+}
+
+/* MOUSE EFFECT */
+.glow-point {
+  position: absolute;
+  box-shadow: 0rem 0rem 1.2rem 0.6rem rgb(var(--glow-rgb));
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  z-index: 2;
+  color: white;
+  font-size: 1rem;
+  animation-duration: 1500ms;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+/* Star Animations */
+@keyframes fall-1 {
+  0% {
+    transform: translate(0px, 0px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(0.25);
+    opacity: 0;
+  }
+  5% {
+    transform: translate(10px, -10px) rotateX(45deg) rotateY(30deg) rotateZ(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(25px, 200px) rotateX(180deg) rotateY(270deg) rotateZ(90deg) scale(1)
