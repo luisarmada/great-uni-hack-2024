@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload File - Rot.ai</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="File.css">
+</head>
+<body>
+
+  <!-- Full-Screen Star Background -->
+  <div id="app">
+    <div id="star-container">
+      <div id="star-pattern"></div>
+      <div id="star-gradient-overlay"></div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <img src="Logos/picofme.png" alt="Logo" class="navbar-logo">
+      <a class="navbar-brand" href="Home.html">Rot.ai</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="Home.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Upload File</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Upload and Age Range Selection -->
+  <div class="container my-5 text-center">
+    <h1 class="display-4">Upload Your Study Notes</h1>
+    <p class="lead">
+      Get ready for your personalized quiz experience! Upload your notes and select your age range to start.
+    </p>
+
+    <!-- File Upload Form -->
+    <form id="upload-form">
+      <div class="mb-3">
+        <input type="file" class="form-control" id="file-input" required>
+      </div>
+      <div class="mb-3">
+        <label for="age-range" class="form-label">Select Age Range:</label>
+        <select class="form-select" id="age-range" required>
+          <option value="under_18">Under 18</option>
+          <option value="18_25">18 - 25</option>
+          <option value="25_35">25 - 35</option>
+          <option value="35_plus">35+</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Upload and Start Quiz</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="File.js"></script>
+</body>
+</html>
