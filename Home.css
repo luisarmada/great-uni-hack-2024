@@ -20,6 +20,13 @@ body {
   font-weight: bold;
   color: #FF6347;
 }
+/* Navbar logo styling */
+.navbar-logo {
+  height: 40px; 
+  width: auto;
+  margin-right: 10px; 
+  vertical-align: middle;
+}
 .container {
   max-width: 700px;
   text-align: center;

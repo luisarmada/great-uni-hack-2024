@@ -2,7 +2,13 @@
     --light-gold-rgb: 249 181 51;
     --dark-gold-rgb: 215 147 23;
   }
-  
+  /* Navbar logo styling */
+.navbar-logo {
+  height: 40px; 
+  width: auto;
+  margin-right: 10px; 
+  vertical-align: middle;
+}
   body {
     background-color: black;
     overflow: hidden;
