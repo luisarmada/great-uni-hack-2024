@@ -11,11 +11,18 @@ engine.setProperty('rate', 150)  # Adjust the rate of speech
 # Initialize Pygame for audio playback
 pygame.mixer.init()
 
-# Define a list of questions with options and correct answer index
+# Define a list of 10 questions with options and correct answer index
 questions = [
     {"question": "What is the powerhouse of the cell?", "options": ["Mitochondria", "Heart", "Chlorophyll", "Buttocks"], "correct_answer_index": 0},
     {"question": "Which planet is known as the Red Planet?", "options": ["Venus", "Earth", "Mars", "Jupiter"], "correct_answer_index": 2},
     {"question": "What is the chemical symbol for water?", "options": ["O2", "H2O", "CO2", "NaCl"], "correct_answer_index": 1},
+    {"question": "What is the largest mammal?", "options": ["Elephant", "Blue Whale", "Giraffe", "Shark"], "correct_answer_index": 1},
+    {"question": "Who developed the theory of relativity?", "options": ["Newton", "Einstein", "Tesla", "Edison"], "correct_answer_index": 1},
+    {"question": "Which gas do plants absorb?", "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Helium"], "correct_answer_index": 1},
+    {"question": "How many continents are there?", "options": ["Five", "Six", "Seven", "Eight"], "correct_answer_index": 2},
+    {"question": "What is the capital of France?", "options": ["Berlin", "Paris", "London", "Rome"], "correct_answer_index": 1},
+    {"question": "Who painted the Mona Lisa?", "options": ["Van Gogh", "Picasso", "Da Vinci", "Rembrandt"], "correct_answer_index": 2},
+    {"question": "What is the boiling point of water?", "options": ["90°C", "100°C", "80°C", "120°C"], "correct_answer_index": 1},
 ]
 option_prefixes = ["A)", "B)", "C)", "D)"]  # Option letters
 
@@ -24,8 +31,8 @@ overlay_image = cv2.imread("media/trump.png", -1)
 overlay_height, overlay_width = 200, 250  # Set larger size for the overlay image
 overlay_image = cv2.resize(overlay_image, (overlay_width, overlay_height))
 
-# Open the video file
-cap = cv2.VideoCapture('media/mc_parkour.mp4')
+# Open the first video file
+cap = cv2.VideoCapture('media/mc_parkour_lq.mp4')
 
 # Initialize question index and timers
 current_question_index = 0
@@ -33,6 +40,7 @@ display_correct_only = False
 show_progress_bar = False
 show_overlay_image = True  # Controls when to show the overlay image
 progress_bar_start_time = 0  # Dedicated timer for the progress bar
+video_switched = False  # Flag to track if video has been switched
 
 # Progress bar settings
 progress_bar_duration = 5      # Progress bar duration (5 seconds)
@@ -105,9 +113,17 @@ def read_question_and_answer():
     next_question()
 
 def next_question():
-    """Move to the next question and reset variables"""
-    global current_question_index
+    """Move to the next question, reset variables, and switch video if needed"""
+    global current_question_index, cap, video_switched
+
     current_question_index = (current_question_index + 1) % len(questions)
+
+    # Switch video after question 5
+    if current_question_index == 5 and not video_switched:
+        cap.release()  # Release the current video capture
+        cap = cv2.VideoCapture('media/family_guy.mp4')  # Switch to the new video
+        video_switched = True  # Mark that the video has been switched
+
     threading.Thread(target=read_question_and_answer).start()
 
 # Start TTS for the first question
@@ -167,7 +183,7 @@ while True:
 
     # Display the overlay image in the bottom-right corner when reading the question
     if show_overlay_image:
-        overlay_y = frame_height - overlay_height  # 0-pixel margin from bottom
+        overlay_y = frame_height - overlay_height
         overlay_x = frame_width - overlay_width - 10    # 10-pixel margin from right
         overlay_image_with_alpha(frame, overlay_image, overlay_x, overlay_y)
 
@@ -190,7 +206,7 @@ while True:
 
     cv2.imshow('video', frame)
 
-    if cv2.waitKey(20) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
