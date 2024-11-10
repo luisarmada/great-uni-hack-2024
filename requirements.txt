@@ -1,0 +1,6 @@
+opencv-python  # For handling video frame processing
+pygame  # For audio playback
+pyttsx3  # For text-to-speech
+openai  # For OpenAI API integration
+Flask  # For creating a web application
+Flask-SocketIO  # Optional, for real-time communication if needed
