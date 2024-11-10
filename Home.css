@@ -19,23 +19,23 @@
     font-weight: bold;
     color: #FF6347; 
   }
-  
+
   .container {
     max-width: 700px;
     text-align: center;
   }
-  
+
   h1 {
     font-size: 3rem;
     font-weight: 700;
     margin-bottom: 20px;
   }
-  
+
   p.lead {
     font-size: 1.3rem;
     color: #555;
   }
-  
+
   .btn-primary {
     font-size: 1.1rem;
     padding: 12px 24px;
@@ -87,4 +87,4 @@
     opacity: 0.9;
     z-index: 2;
   }
-  
+
