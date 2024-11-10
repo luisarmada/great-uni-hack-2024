@@ -9,17 +9,6 @@
     font-family: 'Comic Neue', cursive;
   }
   
-  /* Navbar and Container Styling */
-  .navbar {
-    background-color: transparent;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-  .navbar-brand {
-    font-size: 1.75rem;
-    font-weight: bold;
-    color: #FF6347; 
-  }
-  
   .container {
     max-width: 700px;
     text-align: center;
